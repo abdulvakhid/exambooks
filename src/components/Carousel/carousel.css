@@ -1,0 +1,28 @@
+.slideshow {
+	.img-wrapper {
+		display: none;
+		height: 70vh;
+		img {
+			height: 100%;
+			object-fit: cover;
+			width: 100%;
+		}
+	}
+	.dots {
+		display: flex;
+		justify-content: center;
+		position: relative;
+		z-index: 1;
+		> .dot {
+			background: #fff;
+			height: 0.5vw;
+			margin: -1.4em 3vw;
+			flex-grow: 1;
+			&.active {
+				background: red;
+			}
+		}
+	}
+}
+
+
