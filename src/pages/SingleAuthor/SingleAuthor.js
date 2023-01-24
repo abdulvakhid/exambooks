@@ -43,7 +43,6 @@ export const SingleAuthor = () => {
 			.then((res) => {
 				if (res.status === 201) {
 					setSingleA(res.data);
-					console.log(res.data);
 				}
 			})
 			.catch((err) => console.log(err));
@@ -70,7 +69,6 @@ export const SingleAuthor = () => {
 			.then((res) => {
 				if (res.status === 201) {
 					setBooks(res.data);
-					console.log(res.data);
 				}
 			})
 			.catch((err) => console.log(err));
@@ -88,7 +86,7 @@ export const SingleAuthor = () => {
 			.then((res) => {
 				if (res.status === 201) {
 					setUser(res.data);
-					console.log(res.data);
+					
 				}
 			})
 			.catch((err) => console.log(err));

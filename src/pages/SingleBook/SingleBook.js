@@ -24,7 +24,7 @@ import { AuthContext } from "../../context/AuthContext/auth-context";
 
 import { useTranslation } from "react-i18next";
 import { BookCard } from "../../components/Cards/Cards";
-import { StyledAsar, StyledAsarAll, StyledAuthorAbout, StyledAuthorBooks, StyledAuthorBooksWrap, StyledAuthorContent, StyledAuthorDesc, StyledAuthorImg, StyledAuthorImgBox, StyledAuthorName, StyledBooksList } from "../SingleAuthor/SingleAuthor";
+import { StyledAsar, StyledAsarAll, StyledAuthorAbout, StyledAuthorBooks, StyledAuthorBooksWrap, StyledAuthorContent, StyledAuthorImg, StyledAuthorImgBox, StyledAuthorName, StyledBooksList } from "../SingleAuthor/SingleAuthor";
 
 export const SingleBook = () => {
 	const { id } = useParams();
@@ -69,7 +69,6 @@ export const SingleBook = () => {
 			.then((res) => {
 				if (res.status === 201) {
 					setBooks(res.data);
-					console.log(res.data);
 				}
 			})
 			.catch((err) => console.log(err));
@@ -87,7 +86,6 @@ export const SingleBook = () => {
 			.then((res) => {
 				if (res.status === 201) {
 					setUser(res.data);
-					console.log(res.data);
 				}
 			})
 			.catch((err) => console.log(err));
@@ -185,7 +183,7 @@ export const SingleBook = () => {
 				<StyledAuthorImgBox>
 					<StyledAuthorImg
 						src={`http://localhost:5000/${singlebook.image}`}
-						alt=""
+						alt="mkj"
 					/>
 				</StyledAuthorImgBox>
 				<StyledAuthorContent>

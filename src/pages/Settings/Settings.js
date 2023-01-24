@@ -19,15 +19,13 @@ export const Settings = () => {
 			<StyledSecurityForm
 				onSubmit={(evt) => {
 					evt.preventDefault();
-					console.log(evt.target.value);
 				}}>
 				<StyledProfileContentTitle>{t("settings.title")}</StyledProfileContentTitle>
 				<StyledSettingPage>
 					<StyledSettingLan>{t("settings.lang")}</StyledSettingLan>
 					<StyledLangSelect
 						onChange={(evt) => {
-							console.log(evt.target.value);
-							dispatch(setLangRedux(evt.target.value));
+							dispatch(setLangRedux(localStorage.getItem("language")));
 							localStorage.setItem("language", evt.target.value);
 							i18n.changeLanguage(evt.target.value);
 						}}

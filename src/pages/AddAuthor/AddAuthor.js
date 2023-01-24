@@ -1,4 +1,3 @@
-// import React, { useState } from "react";
 import styled from "styled-components";
 import {
 	StyledContainer,
@@ -8,30 +7,16 @@ import {
 import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
-import * as Yup from "yup";
 import { useFormik } from "formik";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export const AddAuthor = () => {
 	const [file, setFile] = useState(null);
 	const { t } = useTranslation();
-
-	// const uploadImg = () => {
-	// 	const reader = new FileReader();
-
-	// 	reader.onload = function (e) {
-	// 		// get loaded data and render thumbnail.
-	// 		label.style.backgroundImage  = "url("+e.target.result+")";
-	// 		label.classList.add("has-image");
-	// 	};
-	
-	// 	// read the image file as a data URL.
-	// 	reader.readAsDataURL(this.files[0]);
-	// }
-
+	const navigate = useNavigate();
 	const handleChange = (e) => {
 		setFile(e.target.files[0]);
-		
 	};
 
 	const [genre, setGenre] = useState([]);
@@ -79,7 +64,7 @@ export const AddAuthor = () => {
 				.then((response) => {
 					if (response.status === 201) {
 						setAuthor(response.data);
-						console.log(response.data);
+						navigate("/");
 					} else {
 						alert("erre");
 					}
@@ -90,10 +75,6 @@ export const AddAuthor = () => {
 		},
 	});
 
-
-	
-
-
 	return (
 		<StyledContainer>
 			<StyledAddForm onSubmit={formik.handleSubmit}>
@@ -102,12 +83,13 @@ export const AddAuthor = () => {
 						<Styledimg>
 							+
 							<Styledimginput
-							
 								type="file"
 								onChange={handleChange}
 								style={{ width: "200px", backgroundColor: "lightgray" }}
 							/>
-							 { file && <img src={`http://localhost:5000/${file}`} alt="Preview" />}
+							{file && (
+								<img src={`http://localhost:5000/${file}`} alt="Preview" />
+							)}
 						</Styledimg>
 					</StyledAddImg>
 				</StyledFormImgBox>
@@ -251,20 +233,20 @@ export const Styledimg = styled.label`
 	}
 
 	.has-image::before {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background: rgba(50, 50, 50, 0.5);
-	content: " ";
-	transition: ease-in-out 750ms;
-}
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background: rgba(50, 50, 50, 0.5);
+		content: " ";
+		transition: ease-in-out 750ms;
+	}
 
-.has-image::after {
-	content: "Choose another file...";
-	color: white;
-}
+	.has-image::after {
+		content: "Choose another file...";
+		color: white;
+	}
 `;
 
 export const Styledimginput = styled.input`

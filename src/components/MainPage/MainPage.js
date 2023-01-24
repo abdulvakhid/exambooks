@@ -3,7 +3,6 @@ import styled from "styled-components";
 import { StyledContainer } from "../Registr/Registr";
 import { NavLink, Link, useNavigate, Routes, Route } from "react-router-dom";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import AvatarImg from "../../assets/images/avatar.png";
 import { Menu, MenuItem } from "@mui/material";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext/auth-context";
@@ -12,11 +11,11 @@ import { Jadid } from "../Jadid/Jadid";
 import { Sovet } from "../Sovet/Sovet";
 import { Mustaqillik } from "../Mustqaillik/Mustaqillik";
 import axios from "axios";
-import { useFormik } from "formik";
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import herobg from "../../assets/images/hero.png";
-import { Carousel } from "../Carousel/Carousel";
+import { StyledSearchItems, StyledSearchItemsList } from "../../pages/Books/Books";
+import { AuthorCard } from "../Cards/Cards";
 
 export const MainPage = () => {
 	const { t } = useTranslation();
@@ -33,15 +32,17 @@ export const MainPage = () => {
 
 	const { setToken } = useContext(AuthContext);
 
-	const [value, setValue] = useState("");
-	console.log(value);
-	// const [searchResults, setSearchResults] = useState([]);
+	const [data, setData] = useState(null);
+	const inputRef = useRef("");
 
-	useEffect(() => {
-		axios.get(`http://localhost:5000/author/search?${value}`)
-		.then(res => console.log(res))
-		.catch(err => console.log(err));
-	},[value])
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+		console.log(inputRef.current.value);
+		const response = await axios.get(
+			`http://localhost:5000/author/search?author=${inputRef.current.value}`,
+		);
+		setData(response.data);
+	};
 
 
 	//  image uchun
@@ -56,7 +57,6 @@ export const MainPage = () => {
 			.then((res) => {
 				if (res.status === 201) {
 					setUser(res.data);
-					console.log(res.data);
 				}
 			})
 			.catch((err) => console.log(err));
@@ -156,22 +156,20 @@ export const MainPage = () => {
 
 			<StyledContainer>
 				<StyledHeroBg>
-					<Carousel />
+					<StyledHeroCarousel>
+					<StyledHeroBgimg src={herobg} alt="img" />
+					<StyledHeroBgimg src={herobg} alt="img" />
+					<StyledHeroBgimg src={herobg} alt="img" />
+					<StyledHeroBgimg src={herobg} alt="img" />
+					</StyledHeroCarousel>
 				</StyledHeroBg>
 			</StyledContainer>
 
 			<StyledSearchBox>
 				<StyledSearchTitle>{t("mainpage.search")}</StyledSearchTitle>
-				<StyledSearchForm onSubmit={(evt)=> {
-				evt.preventDefault();
-				console.log(evt.target.value);
-				}}>
+				<StyledSearchForm onSubmit={handleSubmit}>
 					<StyledSearchInput
-					onKeyDown={(evt) => {
-						if (evt.key === "Enter") {
-							setValue(evt.target.value);
-						}
-					}}
+					 ref={inputRef}
 						type="text"
 						placeholder={t("mainpage.searchinput")}
 					/>
@@ -180,6 +178,15 @@ export const MainPage = () => {
 					</StyledSearchBtn>
 				</StyledSearchForm>
 			</StyledSearchBox>
+			<StyledSearchItems>
+				{data?.length !== 0 ? (
+					<StyledSearchItemsList>
+						{data?.map((item) => (
+							<AuthorCard key={item.id} item={item} />
+						))}
+					</StyledSearchItemsList>
+				): ""}
+			</StyledSearchItems>
 			<StyledBoxWithout>
 				<StyledMainPageTitle>{t("mainpage.category")}</StyledMainPageTitle>
 				<StyledMainPageGenreList>
@@ -216,12 +223,30 @@ export const MainPage = () => {
 	);
 };
 
+export const StyledHeroCarousel = styled.ul`
+display: flex;
+	flex-wrap: nowrap;
+	overflow-x: auto;
+	margin: 0;
+	margin-bottom: 150px;
+	padding: 0;
+	list-style: none;
+	li {
+		flex: 0 0 auto;
+	}
+	&::-webkit-scrollbar{
+	display: none;
+	}
+`;
+
+
 export const StyledHeroBg = styled.div`
 	position: relative;
 `;
 export const StyledHeroBgimg = styled.img`
 	width: 100%;
 	height: auto;
+	margin-right: 50px;
 `;
 
 export const StyledMainHeader = styled.header`
@@ -362,8 +387,8 @@ export const StyledSearchBox = styled.div`
 	box-shadow: 0px 4px 77px rgba(0, 0, 0, 0.25);
 	border-radius: 15px;
 	position: absolute;
-    top: 223px;
-    right: 514px;
+    top: 377px;
+    right: 260px;
 	z-index: 5;
 `;
 export const StyledSearchTitle = styled.p`

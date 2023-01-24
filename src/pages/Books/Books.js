@@ -1,8 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { Routes, Route, useNavigate } from "react-router-dom";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import AvatarImg from "../../assets/images/avatar.png";
 import { Menu, MenuItem } from "@mui/material";
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext/auth-context";
@@ -19,6 +18,7 @@ import {
 	StyledHeaderNavListItemLink,
 	StyledHeroBg,
 	StyledHeroBgimg,
+	StyledHeroCarousel,
 	StyledMainHeader,
 	StyledMainLogo,
 	StyledMainPageGenreList,
@@ -40,6 +40,7 @@ import { MustaqillikBooks } from "../../components/Mustqaillik/MustaqillikBooks"
 import axios from "axios";
 import { t } from "i18next";
 import herobg from "../../assets/images/hero.png";
+import { BookCard } from "../../components/Cards/Cards";
 
 export const Books = () => {
 	const token = localStorage.getItem("token");
@@ -53,16 +54,18 @@ export const Books = () => {
 	};
 	const { setToken } = useContext(AuthContext);
 
-	const [value, setValue] = useState("");
-	console.log(value);
-	// const [searchResults, setSearchResults] = useState([]);
+	const [data, setData] = useState(null);
+	const inputRef = useRef("");
 
-	useEffect(() => {
-		axios.get(`http://localhost:5000/book/search${value}`)
-		.then(res => console.log(res))
-		.catch(err => console.log(err));
-	},[value])
-
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		axios
+			.get(`http://localhost:5000/book/search?book=${inputRef.current.value}`)
+			.then((response) => {
+				setData(response.data);
+			})
+			.catch((error) => console.log(error));
+	};
 
 	const [user, setUser] = useState("");
 	useEffect(() => {
@@ -105,7 +108,10 @@ export const Books = () => {
 						</StyledHeaderNavList>
 					</StyledHeaderNav>
 					<StyledHeaderAvatarBox>
-						<StyledHeaderAvatarImg src={`http://localhost:5000/${user.image}`} alt="avatar img" />
+						<StyledHeaderAvatarImg
+							src={`http://localhost:5000/${user.image}`}
+							alt="avatar img"
+						/>
 						<StyledDropdownBtn onClick={handleOpenUserMenu}>
 							<KeyboardArrowDownIcon />
 						</StyledDropdownBtn>
@@ -164,26 +170,21 @@ export const Books = () => {
 
 			<StyledContainer>
 				<StyledHeroBg>
-					<StyledHeroBgimg src={herobg} alt="img" />
+					<StyledHeroCarousel>
+						<StyledHeroBgimg src={herobg} alt="img" />
+						<StyledHeroBgimg src={herobg} alt="img" />
+						<StyledHeroBgimg src={herobg} alt="img" />
+						<StyledHeroBgimg src={herobg} alt="img" />
+					</StyledHeroCarousel>
 				</StyledHeroBg>
 			</StyledContainer>
 
-
 			<StyledSearchBox>
 				<StyledSearchTitle>{t("mainpage.search")}</StyledSearchTitle>
-				<StyledSearchForm onSubmit={(evt)=> {
-				evt.preventDefault();
-				console.log(evt.target.value);
-				}}>
+				<StyledSearchForm onSubmit={handleSubmit}>
 					<StyledSearchInput
-					onChange={(evt) => {
-						if (evt.key === "Enter") {
-							console.log(evt.target.value);
-							setValue(evt.target.value);
-			
-						}
-					}}
 						type="text"
+						ref={inputRef}
 						placeholder={t("mainpage.searchinput")}
 					/>
 					<StyledSearchBtn type="submit">
@@ -192,28 +193,37 @@ export const Books = () => {
 				</StyledSearchForm>
 			</StyledSearchBox>
 
+			<StyledSearchItems>
+				{data?.length !== 0 ? (
+					<StyledSearchItemsList>
+						{data?.map((item) => (
+							<BookCard key={item.id} item={item} />
+						))}
+					</StyledSearchItemsList>
+				): ""}
+			</StyledSearchItems>
 
 			<StyledBoxWithout>
 				<StyledMainPageTitle>{t("mainpage.category")}</StyledMainPageTitle>
 				<StyledMainPageGenreList>
 					<StyledMainPageGenreListItem>
 						<StyledMainPageGenreListItemLink to="/books">
-						{t("mainpage.temuriy")}
+							{t("mainpage.temuriy")}
 						</StyledMainPageGenreListItemLink>
 					</StyledMainPageGenreListItem>
 					<StyledMainPageGenreListItem>
 						<StyledMainPageGenreListItemLink to="jadidbooks">
-						{t("mainpage.jadid")}
+							{t("mainpage.jadid")}
 						</StyledMainPageGenreListItemLink>
 					</StyledMainPageGenreListItem>
 					<StyledMainPageGenreListItem>
 						<StyledMainPageGenreListItemLink to="sovetbooks">
-						{t("mainpage.sovet")}
+							{t("mainpage.sovet")}
 						</StyledMainPageGenreListItemLink>
 					</StyledMainPageGenreListItem>
 					<StyledMainPageGenreListItem>
 						<StyledMainPageGenreListItemLink to="mustaqillikbooks">
-						{t("mainpage.mustaqillik")}
+							{t("mainpage.mustaqillik")}
 						</StyledMainPageGenreListItemLink>
 					</StyledMainPageGenreListItem>
 				</StyledMainPageGenreList>
@@ -229,4 +239,11 @@ export const Books = () => {
 	);
 };
 
-export const Styled = styled.li``;
+export const StyledSearchItems = styled.div``;
+export const StyledSearchItemsList = styled.ul`
+display: flex;
+flex-wrap: wrap;
+margin: 0;
+padding: 0;
+list-style-type: none;
+`;

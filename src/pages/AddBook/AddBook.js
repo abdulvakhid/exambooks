@@ -24,8 +24,10 @@ import {
 	StyledFormImgBox,
 } from "../AddAuthor/AddAuthor";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 
 export const AddBook = () => {
+	const navigate = useNavigate();
 	const [author, setAuthor] = useState([]);
 
 	const [file, setFile] = useState(null);
@@ -35,7 +37,6 @@ export const AddBook = () => {
 	};
 	const handleClick = (e) => {
 		e.preventDefault();
-		console.log(file);
 	};
 	const [genre, setGenre] = useState([]);
 
@@ -85,6 +86,7 @@ export const AddBook = () => {
 					if (response.status === 201) {
 						console.log(response);
 						console.log(formik.values.genre_id);
+						navigate("/")
 					}
 				})
 				.catch((error) => {
@@ -92,23 +94,11 @@ export const AddBook = () => {
 				});
 		},
 
+		
 	});
 	
-	// useEffect(() => {
-	// console.log(formik.values.genre_id)
-	// 	axios
-	// 		.get(`http://localhost:5000/author/14`)
-	// 		.then((res) => {
-	// 			if (res.status === 201) {
-	// 				console.log(formik.values.genre_id);
-	// 			}
-	// 		})
-	// 		.catch((err) => console.log(err));
-	// }, [formik.values.genre_id]);
-
-
 	useEffect(() => {
-		console.log(formik.values.genre_id)
+		console.log(formik.values.genre_id);
 		axios
 			.get(`http://localhost:5000/author/genreId/${formik.values.genre_id}`, {
 				headers: {
@@ -117,13 +107,11 @@ export const AddBook = () => {
 			})
 			.then((res) => {
 				if (res.status === 201) {
-                    setAuthor(res.data);
+					setAuthor(res.data);
 				}
 			})
 			.catch((err) => console.log(err));
 	}, [formik.values.genre_id, token]);
-
-
 
 	return (
 		<StyledContainer>
@@ -183,7 +171,9 @@ export const AddBook = () => {
 								value={formik.values.genre_id}
 								onChange={formik.handleChange}
 								onBlur={formik.handleBlur}>
-									<option selected defaultValue={"dsfs"}>genre</option>
+								<option selected defaultValue={"dsfs"}>
+									genre
+								</option>
 								{genre.map((item) => (
 									<StyledAddSelectOption key={item.id} value={item.id}>
 										{item.name}

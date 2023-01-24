@@ -10,7 +10,7 @@ export const langReducer = (state = initialState, action) => {
 		case SET_LANG:
 			return {
 				...state,
-				lang: localStorage.setItem("token",action.payload),
+				lang: localStorage.setItem("language",action.payload),
 			};
 		default:
 			return state;

@@ -45,8 +45,8 @@ export const Login = () => {
 				})
 				.then((response) => {
 					if (response.status === 201) {
-						setToken(response.data.token);
-						dispatch(setTokenRedux(response.data.token));
+						dispatch(setTokenRedux(localStorage.getItem("token")));
+						localStorage.setItem("token", response.data.token);
 						navigate("/");
 					}
 				})

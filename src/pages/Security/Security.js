@@ -9,7 +9,6 @@ import styled from "styled-components";
 import {
 	StyledProfileBtn,
 	StyledProfileContentTitle,
-	StyledProfileFormd,
 	StyledProfileInput,
 	StyledProfileLabel,
 	StyledProfileLabelinfo,
@@ -30,7 +29,6 @@ export const Security = () => {
 			.then((res) => {
 				if (res.status === 201) {
 					setUser(res.data);
-					console.log(res.data);
 				}
 			})
 			.catch((err) => console.log(err));
@@ -57,7 +55,6 @@ export const Security = () => {
 				.then((response) => {
 					if (response.status === 201) {
 						setUser(response.data);
-						console.log(response);
 					} else {
 						alert("erre");
 					}
